@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objectiv</title>
+</head>
+<style>
+    div {
+        border: 3px solid red;
+        margin: 10px;
+        padding: 10px;
+    }
+</style>
+<body>
+<h1>Objectiv.hu posztok</h1>
+</body>
+<script>
+
+    new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.addEventListener("readystatechange", () => {
+            if (xhr.readyState == 4) {
+                let response = JSON.parse(xhr.responseText);
+                resolve(response);
+            }
+        });
+        xhr.open("GET", "https://objectiv.hu/wp-json/wp/v2/posts", true);
+        xhr.send();
+    }).then(function (posts) {
+        for (let post of posts) {
+            console.log(post);
+            let div = document.createElement('div');
+            let p = document.createElement('p');
+            p.innerHTML = post.date;
+            div.appendChild(p);
+            let h2 = document.createElement('h2');
+            h2.innerHTML = post.title.rendered;
+            div.appendChild(h2);
+            div.innerHTML += post.content.rendered;
+            document.body.appendChild(div);
+        }
+    })
+</script>
+
+</html>
